@@ -84,15 +84,21 @@ class workerClass:
                 except:
                     raise
                     print("SendShortMessage exception occured")
-            
-            sql = "UPDATE  smppTrafficMonitor SET msgSend = %s where timeStamp= %s"            
+                    
+            print(data["msgSend"])
+            print("SendShortMessage database")
+            print(data["msgSend"])
+            sql = "UPDATE smpptrafficmonitor SET msgSend = %s where timeStamp= %s"            
             val = (int(data["msgSend"]), str(data["timeStamp"]))
             workerClass().mycursor.execute(sql, val)
-
             workerClass().database.commit()
 
     def stop(self):
         print("stop fun")
+        sql = "UPDATE smpptrafficmonitor SET ackRecv = %s,status =%s where timeStamp= %s"            
+        val = (int(data["ackRecv"]) ,"1", str(data["timeStamp"]))
+        workerClass().mycursor.execute(sql, val)
+        workerClass().database.commit()
         
         try:
             
@@ -114,6 +120,7 @@ class workerClass:
     
     def getResponse(self ,pdu, **kwargs):
         global totMsg
+        key_stop=str(data["timeStamp"])+"_stop"
         print("got submitsm response", pdu.message_id)
         if(pdu.message_id):
             data["ackRecv"] = int(data["ackRecv"]) +1 
@@ -125,14 +132,12 @@ class workerClass:
             key = str(data["timeStamp"])+"_recv"
             print("key====="+key)
             self.red.set(key,data["ackRecv"])
+            print(data["ackRecv"])
             
+        if(int(data["ackRecv"]) == int(data["msgSend"])  and workerClass().red.get(key_stop)=="1"):
+            workerClass().stop()
             print(data["ackRecv"])
         if(int(data["ackRecv"]) == totMsg):
-            sql = "UPDATE  smppTrafficMonitor SET ackRecv = %s where timeStamp= %s"            
-            val = (int(data["ackRecv"]) , str(data["timeStamp"]))
-            workerClass().mycursor.execute(sql, val)
-
-            workerClass().database.commit()
             workerClass().stop()
             print(data["ackRecv"])
             

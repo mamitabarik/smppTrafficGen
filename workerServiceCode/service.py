@@ -41,10 +41,20 @@ class serviceClass:
     def pushDb(self, data):
         database = mysql.connector.connect(host="localhost",user="root",passwd="root",db="smpp")
         mycursor = database.cursor()
-        sql = "INSERT INTO smppTrafficMonitor  VALUES (%s, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        val = (data["systemId"].encode('utf-8'),data["password"].encode('utf-8'),data["systemType"].encode('utf-8'),(data["ip"].encode('utf-8')) , int (data["portNumber"].encode('utf-8')),int (data["sourceAddress"].encode('utf-8')),int(data["sourceAddressRange"].encode('utf-8'))
-                ,int(data["destinationAddress"].encode('utf-8')) , int (data["destinationAddressRange"].encode('utf-8'))
-                ,data["shortMessage"].encode('utf-8'), data["msgSend"],data["ackRecv"], data["timeStamp"])
+        sql = "INSERT INTO smppTrafficMonitor  VALUES (%s, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        val = (data["systemId"].encode('utf-8'),
+               data["password"].encode('utf-8'),
+               data["systemType"].encode('utf-8'),
+               (data["ip"].encode('utf-8')) , 
+               int (data["portNumber"].encode('utf-8')),
+               int (data["sourceAddress"].encode('utf-8')),
+               int(data["sourceAddressRange"].encode('utf-8'))
+                ,int(data["destinationAddress"].encode('utf-8')) ,
+                int (data["destinationAddressRange"].encode('utf-8'))
+                ,data["shortMessage"].encode('utf-8'), 
+                data["msgSend"],
+                data["ackRecv"],
+                data["timeStamp"],"0")
         mycursor.execute(sql,val)
         database.commit()
 
