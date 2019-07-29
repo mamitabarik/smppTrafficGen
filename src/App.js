@@ -3,49 +3,37 @@ import Header from "./Components/Header"
 import MainCon from "./Components/MainCon"
 import MainConDashboard from "./Components/MainConDashboard"
 import Footer from "./Components/Footer"
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import CompletedJobs from "./Components/completedJobs"
+import { render } from "react-dom";
+import Tabs from "./Components/Tabs/Tabs";
 
+const styles = {
+	fontFamily: "sans-serif",
+	textAlign: "center"
+};
 
-
-function Dashboard() {
-  return (
-		<div>
-			<MainConDashboard />
+const App = () => (
+	<div style={styles}>
+		<Header />
+		<Tabs
+			activeTab={{
+				id: "tab1"
+			}}
+		>
+			<Tabs.Tab id="tab1" title="Dashboard">
+				<MainConDashboard />
+			</Tabs.Tab>
+			<Tabs.Tab id="tab2" title="Send Traffic">
+				<MainCon />
+			</Tabs.Tab>
+			<Tabs.Tab id="tab3" title="Completed Jobs">
+				<CompletedJobs />
+			</Tabs.Tab>
 			<Footer />
-		</div>
-	)
-}
- 
-function App() {
-  return (
-    <Router>
-      <div>
-		  <Header/>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/dashboard/">Dashboard</Link>
-            </li>
-          </ul>
-        </nav>
+		</Tabs>
+	</div>
+);
 
-        <Route path="/" exact component={Home} />
-        <Route path="/dashboard/" component={Dashboard} />
-      </div>
-    </Router>
-  );
-}
-
-function Home() {
-	return (
-		<div>
-			<MainCon />
-			<Footer />
-		</div>
-	)
-}
+render(<App />, document.getElementById("root"));
 
 export default App

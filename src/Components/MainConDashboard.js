@@ -19,6 +19,7 @@ class MainConDashboard extends Component {
 		this.handlePause = this.handlePause.bind(this);
 		this.handleResume = this.handleResume.bind(this);
 		this.makeData = this.makeData.bind(this);
+		this.handleDelete = this.handleDelete.bind(this);
 	}
 
 	makeData() {
@@ -90,6 +91,22 @@ class MainConDashboard extends Component {
 		});
 	}
 
+	handleDelete(event) {
+		event.preventDefault();
+		let object = {}
+		object["timeCheck"] = this.state.timeCheck;
+
+		fetch('http://172.19.5.227:5000/delete', {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+				'Content-Length': '23'
+			},
+			body: JSON.stringify(object),
+		});
+	}
+
 	handleResume(event) {
 		event.preventDefault();
 		let object = {}
@@ -142,12 +159,13 @@ class MainConDashboard extends Component {
 
 		return (
 			<div>
-				{this.state.data}
+				
 				<div align="right">
-					<h2>{this.state.timeCheck}</h2>
+					
 					<button type="button" onClick={this.handlePause}>Pause</button>
 					<button type="button" onClick={this.handleResume}>Resume</button>
 					<button type="button" onClick={this.handleStop}>Stop</button>
+					<button type="button" onClick={this.handleDelete}>Delete</button>
 				</div>
 				<br />
 				<ReactTable

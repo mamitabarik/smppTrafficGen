@@ -75,6 +75,7 @@ class workerClass:
 
                     print("inside send msg ",str(src_add),str(dest_add))
                     data["msgSend"] = int(data["msgSend"])+1
+                    
                     print(data["msgSend"])
                     key = str(data["timeStamp"])+"_send"
                     print("key====="+key)
@@ -88,8 +89,10 @@ class workerClass:
             print(data["msgSend"])
             print("SendShortMessage database")
             print(data["msgSend"])
+            key = str(data["timeStamp"])+"_send"
+            
             sql = "UPDATE smpptrafficmonitor SET msgSend = %s where timeStamp= %s"            
-            val = (int(data["msgSend"]), str(data["timeStamp"]))
+            val = ( self.red.get(key), str(data["timeStamp"]))
             workerClass().mycursor.execute(sql, val)
             workerClass().database.commit()
 

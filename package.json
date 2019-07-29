@@ -12,11 +12,17 @@
   "author": "CodeMix",
   "license": "ISC",
   "dependencies": {
+    "bootstrap": "^4.3.1",
+    "glamor": "^2.20.40",
+    "glamorous": "^5.0.0",
     "react": "^16.2.0",
+    "react-bootstrap": "^1.0.0-beta.10",
     "react-dom": "^16.2.0",
     "react-router-dom": "^5.0.1",
     "react-scripts": "^2.1.5",
-    "react-table": "^6.10.0"
+    "react-sticky-footer": "0.1.0-rc3",
+    "react-table": "^6.10.0",
+    "react-toasts": "^3.0.3"
   },
   "browserslist": [
     ">0.2%",

@@ -48,13 +48,9 @@ class serviceClass:
                (data["ip"].encode('utf-8')) , 
                int (data["portNumber"].encode('utf-8')),
                int (data["sourceAddress"].encode('utf-8')),
-               int(data["sourceAddressRange"].encode('utf-8'))
-                ,int(data["destinationAddress"].encode('utf-8')) ,
-                int (data["destinationAddressRange"].encode('utf-8'))
-                ,data["shortMessage"].encode('utf-8'), 
-                data["msgSend"],
-                data["ackRecv"],
-                data["timeStamp"],"0")
+               int(data["sourceAddressRange"].encode('utf-8')) ,int(data["destinationAddress"].encode('utf-8')) ,
+               int (data["destinationAddressRange"].encode('utf-8')),
+               data["shortMessage"].encode('utf-8'),data["msgSend"],data["ackRecv"],data["timeStamp"],"0")
         mycursor.execute(sql,val)
         database.commit()
 
@@ -66,7 +62,7 @@ class serviceClass:
     def getData(self):
         database = mysql.connector.connect(host="localhost",user="root",passwd="root",db="smpp")
         mycursor = database.cursor()
-        sql="select timeStamp,msgSend, ackRecv from smppTrafficMonitor"
+        sql="select timeStamp,msgSend, ackRecv from smppTrafficMonitor where status='0'"
         mycursor.execute(sql)
         res=mycursor.fetchall()
         my_lsit=[]
@@ -90,10 +86,50 @@ class serviceClass:
             my_lsit.append(di)
         #print(my_lsit)
         return my_lsit
+    def completedJob(self):
+
+        database = mysql.connector.connect(host="localhost",user="root",passwd="root",db="smpp")
+        mycursor = database.cursor()
+        sql="select timeStamp , msgSend , ackRecv from smppTrafficMonitor where status='1'"
+        mycursor.execute(sql)
+        res=mycursor.fetchall()
+        lst=[]
+        for row in res:
+            dic = {
+                    "timeStamp":row[0].encode('utf-8'),
+                    "messageSent":row[1] ,
+                    "messageReceived":row[2]
+                  }
+            lst.append(dic)
+        print lst
+        return lst
+    def delete (self,content):
+        print "Inside Delete"
+        database = mysql.connector.connect(host="localhost",user="root",passwd="root",db="smpp")
+        mycursor = database.cursor()
+        h=str(content["timeCheck"])
+    
+        mycursor.execute("delete from smppTrafficMonitor where timeStamp=(%s)",(h,))
+        database.commit()
         
-       # print(json.dumps(my_dict))
 
+     
+@app.route('/getJob', methods=['GET', 'OPTIONS'])
+def getCompletedDJobs():
+    #list1=[{"timeStamp":"00","messageSent":"1","messageReceived":"00"}]
+    print("completed jobs")
+    service=serviceClass()
+    lst=service.completedJob()
+    return json.dumps(lst)
 
+@app.route('/delete', methods=['GET', 'POST'])  
+def delete():
+    service = serviceClass()
+    
+    content=request.json
+    service.delete(content)
+    print("tfhfl===",content)
+    return "deleted"
 
 @app.route('/reciveMessage', methods=['GET', 'POST'])  
 def main():
